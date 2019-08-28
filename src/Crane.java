@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Crane {
     String brand; //Марка крана
-    int maxLoad; //Максимальная грузоподъемность
+    int maxLoadWeight; //Максимальная грузоподъемность
     LinkedHashMap<Double, LinkedHashMap<Double, Double>> craneTableLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
 //    LinkedHashSet<ArrowLoadWeight> craneTableLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
 //    LinkedHashMap<Double, DistLoadWeight> craneTableLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
@@ -25,6 +25,7 @@ public class Crane {
             //Счетчик колличества считаных строк с файла
             int counter = 0;
 
+
             //Считываем и обрабатываем данные из файла
             while (readFile.ready()) {
                 String readLine = readFile.readLine();
@@ -37,7 +38,7 @@ public class Crane {
                         this.brand = readLine;
                         break;
                     case 2: //Вторая строчка - максимальная грузоподъемность крана
-                        this.maxLoad = Integer.parseInt(readLine);
+                        this.maxLoadWeight = Integer.parseInt(readLine);
                         break;
                     case 3: //Расстояния до характерных точек определенной грузоподъемности
                         distanceLoad = readLine;
@@ -98,7 +99,7 @@ public class Crane {
                     if ((double) arrowEntry.getValue() > calculationweight) {
                         tableWeight = (double) arrowEntry.getValue();
                         result = "Вам подходит кран " + this.brand
-                                + " грузоподъемностью " + this.maxLoad
+                                + " грузоподъемностью " + this.maxLoadWeight
                                 + "т с длиной стрелы равной " + arrowLength
                                 + "м. \nМаксимальная грузоподъемность крана при вылете стрелы " + tableDistance
                                 + "м равна " + tableWeight
@@ -109,7 +110,7 @@ public class Crane {
                 }
             }
         }
-        return "Кран " + this.brand + " с грузоподъемностью " + this.maxLoad
+        return "Кран " + this.brand + " с грузоподъемностью " + this.maxLoadWeight
                 + "т вам не подходят: низкая грузоподъемность крана.";
     }
 
@@ -117,7 +118,7 @@ public class Crane {
     public String toString() {
         return "Crane{" +
                 "brand='" + brand + '\'' +
-                ", maxLoad=" + maxLoad +
+                ", maxLoad=" + maxLoadWeight +
                 ", craneTableLoadWeight=" + craneTableLoadWeight +
                 '}';
     }
