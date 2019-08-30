@@ -11,7 +11,7 @@ public class Main {
         craneList.add(new Crane("src/crane/KC55713-6K-32.txt"));
         craneList.add(new Crane("src/crane/KC65719-1K-40.txt"));
 
-        Main.findCrane(craneList, 5, 7);
+        Main.findCrane(craneList, 10, 7);
     }
 
     public static void findCrane (ArrayList<Crane> craneList, double distance, double weight) {

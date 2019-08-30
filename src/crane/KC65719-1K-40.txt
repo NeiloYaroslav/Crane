@@ -1,11 +1,11 @@
 Brand: KC-65719-1K
 MaxLoadWeight: 40
-Distance:				|0	|2	|3	|4	|5	|6	|7	|8	|10	|12	|13	|14	|15	|17
-ArrowLoadWeight (10 arrowLength):	|0	|40	|40	|30	|24	|19.5	|17	|14.5	|0	|0	|0	|0	|0	|0
-ArrowLoadWeight (12 arrowLength):	|0	|0	|20	|20	|20	|18.6	|16.7	|14	|10.5	|0	|0	|0	|0	|0
-ArrowLoadWeight (15 arrowLength):	|0	|0	|20	|20	|20	|18.2	|16.4	|13.8	|10.5	|7.8	|6.8	|0	|0	|0
-ArrowLoadWeight (17 arrowLength):	|0	|0	|20	|20	|20	|17.8	|16.1	|13.7	|10.3	|7.7	|6.8	|6	|5.3	|0
-ArrowLoadWeight (19 arrowLength):	|0	|0	|20	|20	|20	|17.4	|15.8	|13.6	|10.3	|7.6	|6.8	|5.9	|5.2	|4.3
-ArrowLoadWeight (21 arrowLength):	|0	|0	|0	|17	|17	|17	|15.5	|13.4	|10.1	|7.54	|6.5	|5.8	|5.2	|4.2
-ArrowLoadWeight (23 arrowLength):	|0	|0	|0	|15	|15	|15	|15	|13.2	|9.8	|7.4	|6.5	|5.6	|5	|4
-ArrowLoadWeight (25 arrowLength):	|0	|0	|0	|13	|13	|13	|13	|12.8	|9.4	|7.2	|6.3	|5.5	|4.9	|3.9
+Distance:				2	|3	|4	|5	|6	|7	|8	|10	|12	|13	|14	|15	|17
+DistanceToLoadWeight (10 arrowLength):	40	|40	|30	|24	|19.5	|17	|14.5	|0	|0	|0	|0	|0	|0
+DistanceToLoadWeight (12 arrowLength):	0	|20	|20	|20	|18.6	|16.7	|14	|10.5	|0	|0	|0	|0	|0
+DistanceToLoadWeight (15 arrowLength):	0	|20	|20	|20	|18.2	|16.4	|13.8	|10.5	|7.8	|6.8	|0	|0	|0
+DistanceToLoadWeight (17 arrowLength):	0	|20	|20	|20	|17.8	|16.1	|13.7	|10.3	|7.7	|6.8	|6	|5.3	|0
+DistanceToLoadWeight (19 arrowLength):	0	|20	|20	|20	|17.4	|15.8	|13.6	|10.3	|7.6	|6.8	|5.9	|5.2	|4.3
+DistanceToLoadWeight (21 arrowLength):	0	|0	|17	|17	|17	|15.5	|13.4	|10.1	|7.54	|6.5	|5.8	|5.2	|4.2
+DistanceToLoadWeight (23 arrowLength):	0	|0	|15	|15	|15	|15	|13.2	|9.8	|7.4	|6.5	|5.6	|5	|4
+DistanceToLoadWeight (25 arrowLength):	0	|0	|13	|13	|13	|13	|12.8	|9.4	|7.2	|6.3	|5.5	|4.9	|3.9

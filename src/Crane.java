@@ -2,88 +2,81 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Crane {
     String brand; //Марка крана
     int maxLoadWeight; //Максимальная грузоподъемность
-    LinkedHashMap<Double, LinkedHashMap<Double, Double>> craneTableLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
-//    LinkedHashSet<ArrowLoadWeight> craneTableLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
-//    LinkedHashMap<Double, DistLoadWeight> craneTableLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
+    LinkedHashMap<Double, DistanceToLoadWeight> arrowLengthToDistanceLoadWeight = new LinkedHashMap<>(); //Таблица грузоподъемности крана
 
+    public Crane (String filePath) throws IOException {
+        LinkedList<Double> distances = new LinkedList<>();
 
-    public Crane (String fileName) throws IOException {
-        //Считываем файл с характеристиками крана
-        String distanceLoad = ""; //Расстояния до характерных точек определенной грузоподъемности
-
-        //Список грузоподъемности каждой стрелы
-        //Первое значение - длина стрелы, остальные - грузоподъемность в характерных точках
-        LinkedHashSet<String> arrowLoadWeight = new LinkedHashSet<>();
-        double[] arrowLoadWeight = new double[];
-
-        try (BufferedReader readFile = new BufferedReader(new FileReader(fileName))) {
-            //Счетчик колличества считаных строк с файла
-            int counter = 0;
-
-
-            //Считываем и обрабатываем данные из файла
+        try (BufferedReader readFile = new BufferedReader(new FileReader(filePath))) {
             while (readFile.ready()) {
                 String readLine = readFile.readLine();
-                counter++;
+                String craneCharacteristic = readLine.split(":")[0];
 
-                String parameterIdentificator = Pattern.compile("\\w").matcher(readLine).group(0);
+                Double arrowLength = 0.00;
 
-                switch (parameterIdentificator) {
-                    case "ArrowLength": //Первая строчка - марка крана
-                        this.brand = readLine;
+                if (craneCharacteristic.startsWith("DistanceToLoadWeight")) {
+                    Pattern pattern = Pattern.compile("(\\d+\\.*\\d*)");
+                    Matcher matcher = pattern.matcher(craneCharacteristic);
+                    if (matcher.find()) {
+                        arrowLength = Double.parseDouble(matcher.group(0));
+                    }
+                    craneCharacteristic = craneCharacteristic.split("\\s+")[0];
+                }
+
+                switch (craneCharacteristic) {
+                    case "Brand":
+                        this.brand = readLine.split(": ")[1]; //Марка крана
                         break;
-                    case 2: //Вторая строчка - максимальная грузоподъемность крана
-                        this.maxLoadWeight = Integer.parseInt(readLine);
+
+                    case "MaxLoadWeight":
+                        this.maxLoadWeight = Integer.parseInt(readLine.split(": ")[1]); //Грузоподъемность крана
                         break;
-                    case 3: //Расстояния до характерных точек определенной грузоподъемности
-                        distanceLoad = readLine;
+
+                    case "Distance":
+                        for (String dist : splitReadLine(readLine)) {
+                            distances.add(Double.parseDouble(dist));
+                        }
                         break;
-                    default: //Добавляем в список считаную строку с грузоподъемностью каждой стрелы
-                        arrowLoadWeight = readLine.split("\\s+");
-                        arrowLoadWeight.add(readLine);
+
+                    case "DistanceToLoadWeight":
+                        String[] loadLine = splitReadLine(readLine);
+                        DistanceToLoadWeight distanceToLoadWeight = new DistanceToLoadWeight();
+
+                        for (int i = 0; i < loadLine.length; i++) {
+                            distanceToLoadWeight.addDistanceToLoadWeight(distances.get(i), Double.parseDouble(loadLine[i]));
+                        }
+
+                        arrowLengthToDistanceLoadWeight.put(arrowLength, distanceToLoadWeight);
                         break;
                 }
             }
         }
-
-        //Массив характерных точек
-        String[] distances = distanceLoad.split("\\s+");
-
-        for (String line : arrowLoadWeight) {
-            //Массив грузоподъемности каждой стрелы
-            //Первое знавение - длина стрелы, остальные грзоподъемность на расстоянии distances
-            String[] arrowLoad = line.split("\\s+");
-
-            //Карта грузоподъемности каждой стрелы крана,
-            //ключ - расстояние до характерной точки, значение - грузоподъемность в характерной точке
-            LinkedHashMap<Double, Double> arrowWeight = new LinkedHashMap<>();
-            for (int i = 1; i < arrowLoad.length; i++) {
-                arrowWeight.put(Double.parseDouble(distances[i]), Double.parseDouble(arrowLoad[i]));
-            }
-            //Заполняем карту характеристики крана, где
-            //Ключ - длина стрелы, значение - карта с грузоподъемностью в характерных точках, где
-            //ключ - расстояние до характерной точки, значение - грузоподъемность в характерной точке
-            this.craneTableLoadWeight.put(Double.parseDouble(arrowLoad[0]), arrowWeight);
-        }
     }
 
-    public String findLoadWeight (double goalDistance, double calculationweight) {
+    public String[] splitReadLine (String readLine) {
+        String[] elements = readLine.split(":")[1]
+                .replace("\t", "")
+                .replace(" ", "")
+                .split("\\|");
+        return elements;
+    }
+
+    public String findLoadWeight (double goalDistance, double goalWeight) {
         double tableDistance; //Расстояние характерных точек по таблице грузоподъемности крана
         double tableWeight; //Значение грузоподъемности при tableDistance
         double arrowLength; //Длина стрелы
         String result = ""; //Переменная в которую записываем результат
 
-        //Проходим по карте крана, где ключ - длина стрелы, значение - карта грузоподъемности стрелы данного крана
-        for (Map.Entry craneEntry : craneTableLoadWeight.entrySet()) {
-            arrowLength = (double) craneEntry.getKey();
-
-            //Карта грузоподъемности стрелы данного крана
-            HashMap<Double, Double> arrowLoad = (HashMap<Double, Double>) craneEntry.getValue();
+        for (Map.Entry<Double, DistanceToLoadWeight> craneEntry : arrowLengthToDistanceLoadWeight.entrySet()) {
+            arrowLength = craneEntry.getKey();
+            DistanceToLoadWeight distanceToLoadWeight = craneEntry.getValue();
+            LinkedHashMap<Double, Double> arrowLoad = distanceToLoadWeight.getDistanceToLoadWeight(); //Карта грузоподъемности стрелы данного крана
 
             //Если длина стрелы менше расчетного растояния от кнара до места установки груза
             //пропускаем дальнейший поиск по заведомо неподходящей карте грузоподъемности стрелы
@@ -96,22 +89,24 @@ public class Crane {
                 if ((double) arrowEntry.getKey() >= goalDistance) {
                     tableDistance = (double) arrowEntry.getKey();
 
-                    if ((double) arrowEntry.getValue() > calculationweight) {
+                    if ((double) arrowEntry.getValue() > goalWeight) {
                         tableWeight = (double) arrowEntry.getValue();
                         result = "Вам подходит кран " + this.brand
                                 + " грузоподъемностью " + this.maxLoadWeight
                                 + "т с длиной стрелы равной " + arrowLength
                                 + "м. \nМаксимальная грузоподъемность крана при вылете стрелы " + tableDistance
                                 + "м равна " + tableWeight
-                                + "т.\nМаксимальная масса груза " + calculationweight
-                                + "т, расстояние от оси крана до места установки груза " + goalDistance + "м.";
+                                + "т.\nМаксимальная масса груза " + goalWeight
+                                + "т, расстояние от оси крана до места установки груза " + goalDistance + "м."
+                                + "\n================================================================================";
                         return result;
                     }
                 }
             }
         }
         return "Кран " + this.brand + " с грузоподъемностью " + this.maxLoadWeight
-                + "т вам не подходят: низкая грузоподъемность крана.";
+                + "т вам не подходят: низкая грузоподъемность крана."
+                + "\n================================================================================";
     }
 
     @Override
@@ -119,7 +114,7 @@ public class Crane {
         return "Crane{" +
                 "brand='" + brand + '\'' +
                 ", maxLoad=" + maxLoadWeight +
-                ", craneTableLoadWeight=" + craneTableLoadWeight +
+                ", arrowLengthToDistanceLoadWeight=" + arrowLengthToDistanceLoadWeight +
                 '}';
     }
 }
