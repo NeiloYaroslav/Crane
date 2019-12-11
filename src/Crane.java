@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,7 +61,7 @@ public class Crane {
         }
     }
 
-    public String[] splitReadLine (String readLine) {
+    private String[] splitReadLine (String readLine) {
         String[] elements = readLine.split(":")[1]
                 .replace("\t", "")
                 .replace(" ", "")
