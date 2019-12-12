@@ -13,10 +13,10 @@ public class CraneDataBase {
         craneList.add(new Crane("src/crane/KC65719-1K-40.txt"));
     }
 
-    public String findCrane (double distance, double weight) {
-        String result = "";
+    public StringBuilder findCrane (double distance, double weight) {
+        StringBuilder result = new StringBuilder();
         for (Crane crane : craneList) {
-            result += crane.findLoadWeight(distance, weight) ;
+            result.append(crane.findLoadWeight(distance, weight));
         }
         return result;
     }

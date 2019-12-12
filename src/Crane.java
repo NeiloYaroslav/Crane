@@ -94,21 +94,17 @@ public class Crane {
                     if ((double) arrowEntry.getValue() > goalWeight) {
                         tableWeight = (double) arrowEntry.getValue();
                         result = "Вам подходит кран " + this.brand
-                                + " грузоподъемностью " + this.maxLoadWeight
-                                + "т с длиной стрелы равной " + arrowLength
-                                + "м. \nМаксимальная грузоподъемность крана при вылете стрелы " + tableDistance
-                                + "м равна " + tableWeight
-                                + "т.\nМаксимальная масса груза " + goalWeight
-                                + "т, расстояние от оси крана до места установки груза " + goalDistance + "м."
-                                + "\n================================================================================";
+                                + " г/п " + this.maxLoadWeight
+                                + "т и длиной стрелы равной " + arrowLength
+                                + "м. Максимальная г/п крана при вылете стрелы " + tableDistance
+                                + "м равна " + tableWeight + "т."
+                                + "\n" + "\n";
                         return result;
                     }
                 }
             }
         }
-        return "Кран " + this.brand + " с грузоподъемностью " + this.maxLoadWeight
-                + "т вам не подходят: низкая грузоподъемность крана."
-                + "\n================================================================================";
+        return "Вам не подходит кран " + this.brand + " с г/п " + this.maxLoadWeight + "т." + "\n" + "\n";
     }
 
     @Override
